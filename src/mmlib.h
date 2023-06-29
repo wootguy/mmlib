@@ -7,4 +7,5 @@
 
 #include "Scheduler.h"
 #include "StartSound.h"
+#include "HUDSprite.h"
 #include "temp_ents.h"
