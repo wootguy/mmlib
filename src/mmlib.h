@@ -8,4 +8,5 @@
 #include "Scheduler.h"
 #include "StartSound.h"
 #include "HUDSprite.h"
+#include "TextMenu.h"
 #include "temp_ents.h"
