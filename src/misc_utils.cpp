@@ -228,7 +228,7 @@ CBaseEntity* CreateEntity(const char* cname, map<string, string> keyvalues, bool
 		gpGamedllFuncs->dllapi_table->pfnKeyValue(ent, &dat);
 	}
 
-	if (ent && spawn) {
+	if (spawn) {
 		gpGamedllFuncs->dllapi_table->pfnSpawn(ent);
 	}
 
