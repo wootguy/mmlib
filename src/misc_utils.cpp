@@ -7,6 +7,10 @@
 
 using namespace std;
 
+thread::id g_main_thread_id = std::this_thread::get_id();
+ThreadSafeQueue<string> g_thread_prints;
+ThreadSafeQueue<string> g_thread_logs;
+
 string getFileExtension(string fpath) {
 	int dot = fpath.find_last_of(".");
 	if (dot != -1 && dot < fpath.size()-1) {
@@ -38,6 +42,28 @@ string replaceString(string subject, string search, string replace) {
 		pos += replace.length();
 	}
 	return subject;
+}
+
+vector<string> splitString(string str, const char* delimitters)
+{
+	vector<string> split;
+	if (str.size() == 0)
+		return split;
+
+	// somehow plain assignment doesn't create a copy and even modifies the parameter that was passed by value (WTF!?!)
+	//string copy = str; 
+	string copy;
+	for (int i = 0; i < str.length(); i++)
+		copy += str[i];
+
+	char* tok = strtok((char*)copy.c_str(), delimitters);
+
+	while (tok != NULL)
+	{
+		split.push_back(tok);
+		tok = strtok(NULL, delimitters);
+	}
+	return split;
 }
 
 edict_t* getPlayerByUniqueId(string id) {
@@ -117,6 +143,33 @@ void ClientPrint(edict_t* client, int msg_dest, const char* msg_name, const char
 		WRITE_STRING(param4);
 
 	MESSAGE_END();
+}
+
+void clientCommand(edict_t* plr, string cmd, int destType) {
+	MESSAGE_BEGIN(destType, 9, NULL, plr);
+	WRITE_STRING(UTIL_VarArgs(";%s;", cmd.c_str()));
+	MESSAGE_END();
+}
+
+void handleThreadPrints() {
+	string msg;
+	for (int failsafe = 0; failsafe < 10; failsafe++) {
+		if (g_thread_prints.dequeue(msg)) {
+			println(msg.c_str());
+		}
+		else {
+			break;
+		}
+	}
+
+	for (int failsafe = 0; failsafe < 10; failsafe++) {
+		if (g_thread_logs.dequeue(msg)) {
+			logln(msg.c_str());
+		}
+		else {
+			break;
+		}
+	}
 }
 
 unsigned short FixedUnsigned16(float value, float scale)
