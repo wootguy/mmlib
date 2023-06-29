@@ -3,22 +3,6 @@
 #include <string>
 #include <map>
 
-#define MSG_StartSound 107
-
-#define SND_VOLUME 1
-#define SND_PITCH 2
-#define SND_ATTENUATION 4
-#define SND_ORIGIN 8
-#define SND_ENT 16
-//#define SND_STOP 32
-//#define SND_CHANGE_VOL 64
-//#define SND_CHANGE_PITCH 128
-#define SND_SENTENCE 256
-#define SND_REFRESH 512
-#define SND_FORCE_SINGLE 1024
-#define SND_FORCE_LOOP 2048
-#define SND_LINEAR 4096
-#define SND_SKIP_ORIGIN_USE_ENT 8192
 #define SND_IDK 16384 // this is set by ambient_music but idk what it does
 #define SND_OFFSET 32768
 
@@ -41,6 +25,7 @@ struct StartSoundMsg {
 	void send(int msg_dest=MSG_BROADCAST, edict_t* target=NULL);
 };
 
+// call loadSoundCacheFile before playing any sounds
 void PlaySound(edict_t* entity, int channel, const std::string& sample, float volume, float attenuation, int flags = 0, int pitch = PITCH_NORM, int target_ent_unreliable = 0, bool setOrigin = false, const Vector& vecOrigin = Vector(0, 0, 0));
 
 // maps a file path to a sound index, for use with the StartSound network message

@@ -1,29 +1,37 @@
 #include "Scheduler.h"
 #include "meta_utils.h"
 
+using namespace std;
+
 Scheduler g_Scheduler;
 unsigned int g_schedule_id = 1;
 
 void Scheduler::Think() {
     float now = g_engfuncs.pfnTime();
 
-    int maxScheduleId = g_schedule_id; // prevent infinite loop from adding 0 delay schedules
+    vector<function<void()>> funcsToCall;
 
     for (int i = 0; i < functions.size(); i++) {
-        if (now - functions[i].lastCall < functions[i].delay || functions[i].scheduleId >= maxScheduleId) {
+        ScheduledFunction_internal& func = functions[i];
+
+        if (now - func.lastCall < func.delay) {
             continue;
         }
 
-        // not using a local reference to functions[i] because 'functions' might be updated
-        // as part of this func() call
-        functions[i].func();
-        functions[i].lastCall = now;
-        functions[i].callCount++;
+        // wait to call function in case it adds/removes schedules and messes up this loop
+        funcsToCall.push_back(func.func);
+        
+        func.lastCall = now;
+        func.callCount++;
 
-        if (functions[i].maxCalls >= 0 && functions[i].callCount >= functions[i].maxCalls) {
+        if (func.maxCalls >= 0 && func.callCount >= func.maxCalls) {
             functions.erase(functions.begin() + i);
             i--;
         }
+    }
+
+    for (int i = 0; i < funcsToCall.size(); i++) {
+        funcsToCall[i]();
     }
 }
 
