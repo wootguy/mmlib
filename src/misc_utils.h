@@ -4,21 +4,48 @@
 #include <string>
 #include <map>
 #include "private_api.h"
+#include "ThreadSafeQueue.h"
+#include <thread>
 
-#define MSG_ChatMsg 74
-#define MSG_TextMsg 75
+extern std::thread::id g_main_thread_id;
+extern ThreadSafeQueue<std::string> g_thread_prints;
+extern ThreadSafeQueue<std::string> g_thread_logs;
 
-#define println(fmt,...) {ALERT(at_console, (char*)(std::string(fmt) + "\n").c_str(), ##__VA_ARGS__); }
+// thread safe console printing
+// remember to call handleThreadPrints() every frame in multi-threaded plugins
+#define println(fmt,...) { \
+	if (std::this_thread::get_id() == g_main_thread_id) { \
+		ALERT(at_console, (char*)(std::string(fmt) + "\n").c_str(), ##__VA_ARGS__ ); \
+	} \
+	else { \
+		g_thread_prints.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+	} \
+}
+
+#define logln(fmt,...) { \
+	if (std::this_thread::get_id() == g_main_thread_id) { \
+		ALERT(at_logged, (char*)(std::string(fmt) + "\n").c_str(), ##__VA_ARGS__ ); \
+	} \
+	else { \
+		g_thread_logs.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+	} \
+}
 
 // prevent conflicts with auto-included headers
-#define Min(a,b)            (((a) < (b)) ? (a) : (b))
-#define Max(a,b)           (((a) > (b)) ? (a) : (b))
+#define Min(a, b) (((a) < (b)) ? (a) : (b))
+#define Max(a, b) (((a) > (b)) ? (a) : (b))
 
 std::string replaceString(std::string subject, std::string search, std::string replace);
 
+std::vector<std::string> splitString(std::string str, const char* delimitters);
+
 edict_t* getPlayerByUniqueId(std::string id);
 
+// unique ID = Steam ID or name if on LAN
 std::string getPlayerUniqueId(edict_t* plr);
+
+// User IDs change every time a user connects to the server
+edict_t* getPlayerByUserId(int id);
 
 bool isValidPlayer(edict_t* plr);
 
@@ -31,6 +58,11 @@ std::string vecToString(Vector vec);
 void ClientPrintAll(int msg_dest, const char* msg_name, const char* param1 = NULL, const char* param2 = NULL, const char* param3 = NULL, const char* param4 = NULL);
 
 void ClientPrint(edict_t* client, int msg_dest, const char* msg_name, const char* param1 = NULL, const char* param2 = NULL, const char* param3 = NULL, const char* param4 = NULL);
+
+void clientCommand(edict_t* plr, std::string cmd, int destType = MSG_ONE);
+
+// call this every frame if printing from multiple threads
+void handleThreadPrints();
 
 void HudMessageAll(const hudtextparms_t& textparms, const char* pMessage, int dest = -1);
 

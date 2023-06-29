@@ -30,6 +30,7 @@ set(META_HELPER_HEADERS
 	${CMAKE_CURRENT_LIST_DIR}/src/temp_ents.h
 	${CMAKE_CURRENT_LIST_DIR}/src/HUDSprite.h
 	${CMAKE_CURRENT_LIST_DIR}/src/TextMenu.h
+	${CMAKE_CURRENT_LIST_DIR}/src/ThreadSafeQueue.h
 )
 
 set(META_HELPER_SOURCES
@@ -42,6 +43,7 @@ set(META_HELPER_SOURCES
 	${CMAKE_CURRENT_LIST_DIR}/src/temp_ents.cpp
 	${CMAKE_CURRENT_LIST_DIR}/src/HUDSprite.cpp
 	${CMAKE_CURRENT_LIST_DIR}/src/TextMenu.cpp
+	${CMAKE_CURRENT_LIST_DIR}/src/ThreadSafeQueue.cpp
 )
 
 set(SVEN_API_HEADERS ${SVEN_API_HEADERS} PARENT_SCOPE)

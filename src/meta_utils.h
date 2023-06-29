@@ -12,9 +12,6 @@
 // get a player index as a bitfield index
 #define PLAYER_BIT(edt) (1 << (ENTINDEX(edt) % 32))
 
-#define println(fmt,...) {ALERT(at_console, (char*)(std::string(fmt) + "\n").c_str(), ##__VA_ARGS__);}
-#define logln(fmt, ...) {ALERT(at_logged, (char*)(std::string(fmt) + "\n").c_str(), ##__VA_ARGS__);}
-
 struct CommandArgs {
 	std::vector<std::string> args;
 	bool isConsoleCmd;
