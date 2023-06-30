@@ -16,6 +16,13 @@ float readCustomKeyvalueFloat(edict_t* ent, std::string keyName);
 std::string readCustomKeyvalueString(edict_t* ent, std::string keyName);
 Vector readCustomKeyvalueVector(edict_t* ent, std::string keyName);
 
+void writeCustomKeyvalue(edict_t* ent, std::string keyName, int value);
+void writeCustomKeyvalue(edict_t* ent, std::string keyName, float value);
+void writeCustomKeyvalue(edict_t* ent, std::string keyName, std::string value);
+void writeCustomKeyvalue(edict_t* ent, std::string keyName, Vector value);
+
+bool customKeyvalueExists(edict_t* ent, std::string keyName);
+
 void TakeDamage(edict_t* victim, edict_t* inflictor, edict_t* attacker, float damage, int damageType);
 void Killed(edict_t* victim, edict_t* attacker, int gibMode);
 void Revive(edict_t* target);
@@ -31,3 +38,6 @@ void PrecacheSound(std::string snd);
 // then you'll get a fatal precache error when reloading.
 // Using the sven version of PrecacheModel fixes that.
 void PrecacheModel(std::string mdl);
+
+// might not be necessary, needs testing
+void PrecacheGeneric(std::string mdl);

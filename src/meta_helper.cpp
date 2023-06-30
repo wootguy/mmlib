@@ -3,8 +3,16 @@
 
 using namespace std;
 
+// keep in sync with the angelscript plugin
+enum custom_key_types {
+	KEY_TYPE_INTEGER,
+	KEY_TYPE_FLOAT,
+	KEY_TYPE_STRING,
+	KEY_TYPE_VECTOR,
+};
+
 void hook_angelscript(string hook, string cmdname, void (*callback)()) {
-	//REG_SVR_COMMAND((char*)cmdname.c_str(), callback);
+	REG_SVR_COMMAND((char*)cmdname.c_str(), callback);
 	g_engfuncs.pfnServerCommand((char*)("as_command .RegisterHook \"" + hook + "\" \"" + cmdname + "\";").c_str());
 	g_engfuncs.pfnServerExecute();
 }
@@ -57,6 +65,47 @@ Vector readCustomKeyvalueVector(edict_t* ent, string keyName) {
 	return retVal;
 }
 
+void writeCustomKeyvalue(edict_t* ent, string keyName, int value) {
+	string args = to_string(ENTINDEX(ent)) + " " + to_string(KEY_TYPE_INTEGER) + " " + keyName + " " + to_string(value);
+
+	g_engfuncs.pfnServerCommand((char*)("as_command .CustomKeyWrite " + args + ";").c_str());
+	g_engfuncs.pfnServerExecute();
+}
+
+void writeCustomKeyvalue(edict_t* ent, string keyName, float value) {
+	string args = to_string(ENTINDEX(ent)) + " " + to_string(KEY_TYPE_FLOAT) + " " + keyName + " " + to_string(value);
+
+	g_engfuncs.pfnServerCommand((char*)("as_command .CustomKeyWrite " + args + ";").c_str());
+	g_engfuncs.pfnServerExecute();
+}
+
+void writeCustomKeyvalue(edict_t* ent, string keyName, string value) {
+	string args = to_string(ENTINDEX(ent)) + " " + to_string(KEY_TYPE_STRING) + " " + keyName + " " + value;
+
+	g_engfuncs.pfnServerCommand((char*)("as_command .CustomKeyWrite " + args + ";").c_str());
+	g_engfuncs.pfnServerExecute();
+}
+
+void writeCustomKeyvalue(edict_t* ent, string keyName, Vector value) {
+	string args = to_string(ENTINDEX(ent)) + " " + to_string(KEY_TYPE_VECTOR) + " " + keyName + " \"" + vecToString(value) + "\"";
+
+	g_engfuncs.pfnServerCommand((char*)("as_command .CustomKeyWrite " + args + ";").c_str());
+	g_engfuncs.pfnServerExecute();
+}
+
+bool customKeyvalueExists(edict_t* ent, string keyName) {
+	string args = to_string(ENTINDEX(ent)) + " " + keyName;
+
+	int oldVal = ent->v.iuser4;
+	g_engfuncs.pfnServerCommand((char*)("as_command .CustomKeyExists " + args + ";").c_str());
+	g_engfuncs.pfnServerExecute();
+	int retVal = ent->v.iuser4;
+
+	ent->v.iuser4 = oldVal;
+
+	return retVal != 0;
+}
+
 void TakeDamage(edict_t* victim, edict_t* inflictor, edict_t* attacker, float damage, int damageType) {
 	string s_victim = to_string(ENTINDEX(victim));
 	string s_inflictor = to_string(ENTINDEX(inflictor));
@@ -102,5 +151,10 @@ void PrecacheSound(string snd) {
 
 void PrecacheModel(string mdl) {
 	g_engfuncs.pfnServerCommand((char*)("as_command .PrecacheModel " + mdl + ";").c_str());
+	g_engfuncs.pfnServerExecute();
+}
+
+void PrecacheGeneric(string mdl) {
+	g_engfuncs.pfnServerCommand((char*)("as_command .PrecacheGeneric " + mdl + ";").c_str());
 	g_engfuncs.pfnServerExecute();
 }

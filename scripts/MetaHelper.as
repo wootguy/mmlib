@@ -1,10 +1,13 @@
 // This plugin gives metamod access to private Sven APIs and hooks
 // communication is done using server commands
 
-CConCommand precacheSoundCmd( "PrecacheSound", "Precache a sound from metamod", @precacheSound );
-CConCommand precacheModelCmd( "PrecacheModel", "Precache a model from metamod", @precacheModel );
+CConCommand PrecacheSoundCmd( "PrecacheSound", "Precache a sound from metamod", @PrecacheSound );
+CConCommand PrecacheModelCmd( "PrecacheModel", "Precache a model from metamod", @PrecacheModel );
+CConCommand PrecacheGenericCmd( "PrecacheGeneric", "Precache a model from metamod", @PrecacheGeneric );
 CConCommand registerHookCmd( "RegisterHook", "relay an angelscript hook to metamod using the given command name", @registerHook );
 CConCommand CustomKeyReadCmd( "CustomKeyRead", "reads a custom keyvalue into a pev variable", @CustomKeyRead );
+CConCommand CustomKeyWriteCmd( "CustomKeyWrite", "writes a custom keyvalue", @CustomKeyWrite );
+CConCommand CustomKeyExistsCmd( "CustomKeyExists", "check if a custom keyvalue exists", @CustomKeyExists );
 CConCommand EntTakeDamageCmd( "EntTakeDamage", "apply damage to an entity", @EntTakeDamage );
 CConCommand EntKillCmd( "EntKill", "apply damage to an entity", @EntKill );
 CConCommand EntReviveCmd( "EntRevive", "apply damage to an entity", @EntRevive );
@@ -76,6 +79,15 @@ enum custom_key_types {
 	KEY_TYPE_FLOAT,
 	KEY_TYPE_STRING,
 	KEY_TYPE_VECTOR,
+}
+
+Vector parseVector(string s) {
+	array<string> values = s.Split(" ");
+	Vector v(0,0,0);
+	if (values.length() > 0) v.x = atof( values[0] );
+	if (values.length() > 1) v.y = atof( values[1] );
+	if (values.length() > 2) v.z = atof( values[2] );
+	return v;
 }
 
 void EntRevive(const CCommand@ args) {
@@ -155,12 +167,67 @@ void CustomKeyRead(const CCommand@ args) {
 	}
 }
 
-void precacheModel(const CCommand@ args) {
+void CustomKeyWrite(const CCommand@ args) {
+	g_totalCalls++;
+	CBaseEntity@ ent = g_EntityFuncs.Instance(atoi(args[1]));
+	
+	if (ent is null) {
+		println("[MetaHelper] Attempt to read custom keyvalue from invalid ent " + args[1]);
+		return;
+	}
+
+	CustomKeyvalues@ customKeys = ent.GetCustomKeyvalues();
+	int argType = atoi(args[2]);
+	
+	switch(argType) {
+		case KEY_TYPE_INTEGER:
+		//println("[MetaHelper] Read " + args[2] + " to iuser4");
+		customKeys.SetKeyvalue(args[3], atoi(args[4]));
+		break;
+		case KEY_TYPE_FLOAT:
+		//println("[MetaHelper] Read " + args[2] + " to fuser4");
+		customKeys.SetKeyvalue(args[3], atof(args[4]));
+		break;
+		case KEY_TYPE_STRING:
+		//println("[MetaHelper] Read " + args[2] + " to noise3");
+		customKeys.SetKeyvalue(args[3], args[4]);
+		break;
+		case KEY_TYPE_VECTOR:
+		//println("[MetaHelper] Read " + args[2] + " to vuser4");
+		customKeys.SetKeyvalue(args[3], parseVector(args[4]));
+		break;
+		default:
+		println("[MetaHelper] Invalid custom keyvalue type " + argType);
+		break;
+	}
+}
+
+void CustomKeyExists(const CCommand@ args) {
+	g_totalCalls++;
+	CBaseEntity@ ent = g_EntityFuncs.Instance(atoi(args[1]));
+	
+	if (ent is null) {
+		println("[MetaHelper] Attempt to read custom keyvalue from invalid ent " + args[1]);
+		return;
+	}
+
+	CustomKeyvalues@ customKeys = ent.GetCustomKeyvalues();
+	CustomKeyvalue key(customKeys.GetKeyvalue(args[2]));
+	
+	ent.pev.iuser4 = key.Exists() ? 1 : 0;
+}
+
+void PrecacheModel(const CCommand@ args) {
 	g_totalCalls++;
 	g_Game.PrecacheModel(args[1]);
 }
 
-void precacheSound(const CCommand@ args) {
+void PrecacheGeneric(const CCommand@ args) {
+	g_totalCalls++;
+	g_Game.PrecacheGeneric(args[1]);
+}
+
+void PrecacheSound(const CCommand@ args) {
 	g_totalCalls++;
 	g_SoundSystem.PrecacheSound(args[1]);
 	g_Game.PrecacheGeneric("sound/" + args[1]);
