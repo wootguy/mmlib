@@ -47,22 +47,18 @@ string replaceString(string subject, string search, string replace) {
 vector<string> splitString(string str, const char* delimitters)
 {
 	vector<string> split;
-	if (str.size() == 0)
-		return split;
+	size_t start = 0;
+	size_t end = str.find_first_of(delimitters);
 
-	// somehow plain assignment doesn't create a copy and even modifies the parameter that was passed by value (WTF!?!)
-	//string copy = str; 
-	string copy;
-	for (int i = 0; i < str.length(); i++)
-		copy += str[i];
-
-	char* tok = strtok((char*)copy.c_str(), delimitters);
-
-	while (tok != NULL)
+	while (end != std::string::npos)
 	{
-		split.push_back(tok);
-		tok = strtok(NULL, delimitters);
+		split.push_back(str.substr(start, end - start));
+		start = end + 1;
+		end = str.find_first_of(delimitters, start);
 	}
+
+	split.push_back(str.substr(start));
+
 	return split;
 }
 
@@ -113,6 +109,16 @@ string toLowerCase(string str) {
 
 	for (int i = 0; str[i]; i++) {
 		out[i] = tolower(str[i]);
+	}
+
+	return out;
+}
+
+string toUpperCase(string str) {
+	string out = str;
+
+	for (int i = 0; str[i]; i++) {
+		out[i] = toupper(str[i]);
 	}
 
 	return out;
@@ -461,4 +467,13 @@ void RelaySay(string message) {
 	g_engfuncs.pfnCVarSetString("relay_say_msg", message.c_str());
 	g_engfuncs.pfnServerCommand(UTIL_VarArgs("as_command .relay_say %s\n", Plugin_info.name));
 	g_engfuncs.pfnServerExecute();
+}
+
+bool fileExists(std::string path) {
+	if (FILE* file = fopen(path.c_str(), "r"))
+	{
+		fclose(file);
+		return true;
+	}
+	return false;
 }

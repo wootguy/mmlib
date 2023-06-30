@@ -9,4 +9,5 @@
 #include "StartSound.h"
 #include "HUDSprite.h"
 #include "TextMenu.h"
+#include "UserInfo.h"
 #include "temp_ents.h"

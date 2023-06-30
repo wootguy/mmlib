@@ -53,6 +53,8 @@ std::string trimSpaces(std::string s);
 
 std::string toLowerCase(std::string str);
 
+std::string toUpperCase(std::string str);
+
 std::string vecToString(Vector vec);
 
 void ClientPrintAll(int msg_dest, const char* msg_name, const char* param1 = NULL, const char* param2 = NULL, const char* param3 = NULL, const char* param4 = NULL);
@@ -91,3 +93,5 @@ void RemoveEntity(edict_t* ent);
 
 // send a message the angelscript chat bridge plugin
 void RelaySay(std::string message);
+
+bool fileExists(std::string path);
