@@ -1,4 +1,6 @@
 #pragma once
+#include <extdll.h>
+#include <meta_api.h>
 #include <vector>
 #include <functional>
 
@@ -21,6 +23,8 @@ public:
 
     bool HasBeenRemoved();
 };
+
+extern unsigned int g_schedule_id; // don't touch this
 
 // there should only be one instance of this in the plugin (g_Scheduler)
 class Scheduler {
@@ -61,5 +65,4 @@ public:
 
 };
 
-extern unsigned int g_schedule_id; // don't touch this
 extern Scheduler g_Scheduler;

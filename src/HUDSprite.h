@@ -2,6 +2,7 @@
 #include <string>
 #include <extdll.h>
 #include <edict.h>
+#include <stdint.h>
 
 struct RGBA {
 	uint8_t r, g, b, a;

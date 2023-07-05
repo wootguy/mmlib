@@ -4,6 +4,7 @@
 #include "Scheduler.h"
 #include "meta_helper.h"
 #include "meta_utils.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -459,7 +460,7 @@ void RemoveEntity(edict_t* ent) {
 }
 
 void RelaySay(string message) {
-	std::remove(message.begin(), message.end(), '\n'); // stip any newlines, ChatBridge.as takes care
+	message.erase(std::remove(message.begin(), message.end(), '\n'), message.end()); // stip any newlines, ChatBridge.as takes care
 	replaceString(message, "\"", "'"); // replace quotes so cvar is set correctly
 
 	logln(string("[RelaySay ") + Plugin_info.name + "]: " + message + "\n");
