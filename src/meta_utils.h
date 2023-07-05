@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stdint.h>
 
 #define MAX_PLAYERS 32
 
