@@ -95,6 +95,44 @@ edict_t* getPlayerByUserId(int id) {
 	return NULL;
 }
 
+edict_t* getPlayerByName(edict_t* caller, string name, bool printError) {
+	name = toLowerCase(name);
+	int partialMatches = 0;
+	edict_t* partialMatch;
+
+	for (int i = 1; i <= gpGlobals->maxClients; i++) {
+		edict_t* plr = INDEXENT(i);
+
+		if (!isValidPlayer(plr)) {
+			continue;
+		}
+
+		const string steamId = toLowerCase(getPlayerUniqueId(plr));
+
+		string plrName = toLowerCase(STRING(plr->v.netname));
+		if (plrName == name || steamId == name)
+			return plr;
+		else if (plrName.find(name) != -1)
+		{
+			partialMatch = plr;
+			partialMatches++;
+		}
+	}
+
+	if (partialMatches == 1) {
+		return partialMatch;
+	}
+	else if (partialMatches > 1) {
+		if (printError)
+			ClientPrint(caller, HUD_PRINTTALK, UTIL_VarArgs("There are %d players that have \"%s\" in their name. Be more specific.", partialMatches, name.c_str()));
+	}
+	else if (printError) {
+		ClientPrint(caller, HUD_PRINTTALK, UTIL_VarArgs("There is no player named \"%s\"", name.c_str()));
+	}
+
+	return NULL;
+}
+
 bool isValidPlayer(edict_t* plr) {
 	return plr && (plr->v.flags & FL_CLIENT) != 0;
 }

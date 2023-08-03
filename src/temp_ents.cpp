@@ -143,3 +143,18 @@ void te_teleport(Vector pos, int msgType, edict_t* dest)
 	WRITE_COORD(pos.z);
 	MESSAGE_END();
 }
+
+void te_bloodsprite(Vector pos, const char* sprite1, const char* sprite2, uint8_t color, uint8_t scale,
+	int msgType, edict_t* dest)
+{
+	MESSAGE_BEGIN(msgType, SVC_TEMPENTITY, NULL, dest);
+	WRITE_BYTE(TE_BLOODSPRITE);
+	WRITE_COORD(pos.x);
+	WRITE_COORD(pos.y);
+	WRITE_COORD(pos.z);
+	WRITE_SHORT(MODEL_INDEX(sprite1));
+	WRITE_SHORT(MODEL_INDEX(sprite2));
+	WRITE_BYTE(color);
+	WRITE_BYTE(scale);
+	MESSAGE_END();
+}

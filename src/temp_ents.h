@@ -50,3 +50,7 @@ void te_dlight(Vector pos, uint8_t radius = 32, Color c = WHITE,
 	int msgType = MSG_BROADCAST, edict_t* dest = NULL);
 
 void te_teleport(Vector pos, int msgType = MSG_BROADCAST, edict_t* dest = NULL);
+
+void te_bloodsprite(Vector pos, const char* sprite1 = "sprites/bloodspray.spr",
+	const char* sprite2 = "sprites/blood.spr", uint8_t color = 70, uint8_t scale = 3,
+	int msgType = MSG_BROADCAST, edict_t* dest = NULL);
