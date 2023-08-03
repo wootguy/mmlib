@@ -31,6 +31,24 @@ extern ThreadSafeQueue<std::string> g_thread_logs;
 	} \
 }
 
+#define print(fmt,...) { \
+	if (std::this_thread::get_id() == g_main_thread_id) { \
+		ALERT(at_console, (char*)(std::string(fmt)).c_str(), ##__VA_ARGS__ ); \
+	} \
+	else { \
+		g_thread_prints.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+	} \
+}
+
+#define log(fmt,...) { \
+	if (std::this_thread::get_id() == g_main_thread_id) { \
+		ALERT(at_logged, (char*)(std::string(fmt)).c_str(), ##__VA_ARGS__ ); \
+	} \
+	else { \
+		g_thread_logs.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+	} \
+}
+
 // prevent conflicts with auto-included headers
 #define Min(a, b) (((a) < (b)) ? (a) : (b))
 #define Max(a, b) (((a) > (b)) ? (a) : (b))
@@ -46,6 +64,8 @@ std::string getPlayerUniqueId(edict_t* plr);
 
 // User IDs change every time a user connects to the server
 edict_t* getPlayerByUserId(int id);
+
+edict_t* getPlayerByName(edict_t* caller, std::string name, bool printError=true);
 
 bool isValidPlayer(edict_t* plr);
 
