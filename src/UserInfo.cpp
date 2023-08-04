@@ -11,7 +11,15 @@ UserInfo::UserInfo(edict_t* plr) {
 
 void UserInfo::setInfo(edict_t* plr) {
 	char* info = g_engfuncs.pfnGetInfoKeyBuffer(plr);
-	
+	setInfo(info);
+	index = ENTINDEX(plr) - 1;
+}
+
+UserInfo::UserInfo(char* info) {
+	setInfo(info);
+}
+
+void UserInfo::setInfo(char* info) {
 	cl_lw = INFOKEY_VALUE(info, "cl_lw");
 	cl_lc = INFOKEY_VALUE(info, "cl_lc");
 	bottomcolor = INFOKEY_VALUE(info, "bottomcolor");
@@ -25,8 +33,6 @@ void UserInfo::setInfo(edict_t* plr) {
 	cl_hideadmin = INFOKEY_VALUE(info, "cl_hideadmin");
 	hud_weaponautoswitch = INFOKEY_VALUE(info, "hud_weaponautoswitch");
 	model = INFOKEY_VALUE(info, "model");
-
-	index = ENTINDEX(plr) - 1;
 }
 
 string UserInfo::infoString() {

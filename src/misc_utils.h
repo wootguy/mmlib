@@ -31,7 +31,8 @@ extern ThreadSafeQueue<std::string> g_thread_logs;
 	} \
 }
 
-#define print(fmt,...) { \
+// p in printp meaning "part of line" I guess, instead of "ln" for complete line (newline)
+#define printp(fmt,...) { \
 	if (std::this_thread::get_id() == g_main_thread_id) { \
 		ALERT(at_console, (char*)(std::string(fmt)).c_str(), ##__VA_ARGS__ ); \
 	} \
@@ -40,7 +41,7 @@ extern ThreadSafeQueue<std::string> g_thread_logs;
 	} \
 }
 
-#define log(fmt,...) { \
+#define logp(fmt,...) { \
 	if (std::this_thread::get_id() == g_main_thread_id) { \
 		ALERT(at_logged, (char*)(std::string(fmt)).c_str(), ##__VA_ARGS__ ); \
 	} \
