@@ -1,22 +1,30 @@
 cmake_minimum_required(VERSION 3.6)
 
+if (WIN32)
+	set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/windows)
+	target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
+else()
+	set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/linux)
+	target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
+endif()
+
 set(SVEN_API_HEADERS
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBaseAnimating.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBaseButton.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBaseDelay.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBaseEntity.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBaseMonster.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBasePlayer.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBasePlayerItem.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBasePlayerWeapon.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBaseTank.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CBaseToggle.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CCineMonster.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CItemInventory.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/CPathTrack.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/EHandle.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/private_api.h
-	${CMAKE_CURRENT_LIST_DIR}/include/sven/sc_enums.h
+	${sven_header_path}/CBaseAnimating.h
+	${sven_header_path}/CBaseButton.h
+	${sven_header_path}/CBaseDelay.h
+	${sven_header_path}/CBaseEntity.h
+	${sven_header_path}/CBaseMonster.h
+	${sven_header_path}/CBasePlayer.h
+	${sven_header_path}/CBasePlayerItem.h
+	${sven_header_path}/CBasePlayerWeapon.h
+	${sven_header_path}/CBaseTank.h
+	${sven_header_path}/CBaseToggle.h
+	${sven_header_path}/CCineMonster.h
+	${sven_header_path}/CItemInventory.h
+	${sven_header_path}/CPathTrack.h
+	${sven_header_path}/EHandle.h
+	${sven_header_path}/private_api.h
+	${sven_header_path}/sc_enums.h
 )
 
 set(META_HELPER_HEADERS
@@ -59,8 +67,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/incl
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/dlls)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/engine)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/pm_shared)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/sven)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
-
-
-
