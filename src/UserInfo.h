@@ -26,7 +26,11 @@ struct UserInfo {
 
 	UserInfo(edict_t* plr);
 
+	UserInfo(char* infoString);
+
 	void setInfo(edict_t* plr);
+
+	void setInfo(char* infoString);
 
 	std::string infoString();
 
