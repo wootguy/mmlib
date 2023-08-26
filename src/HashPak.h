@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <stdint.h>
 
 #define CMP_NONE  0
 #define CMP_LZSS  1
