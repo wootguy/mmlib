@@ -5,6 +5,10 @@
 
 using namespace std;
 
+const string g_soundcache_folder = "svencoop/maps/soundcache/";
+std::map<std::string, int> g_SoundCache;
+std::vector<std::string> g_SoundCacheFiles;
+
 void StartSoundMsg::send(int msg_dest, edict_t* target) {
 	MESSAGE_BEGIN(msg_dest, MSG_StartSound, NULL, target);
 	WRITE_SHORT(flags);
@@ -95,11 +99,9 @@ void PlaySound(edict_t* entity, int channel, const std::string& sample, float vo
 	}
 }
 
-const string g_soundcache_folder = "svencoop/maps/soundcache/";
-std::map<std::string, int> g_SoundCache;
-
 void loadSoundCacheFile(int attempts) {
 	g_SoundCache.clear();
+	g_SoundCacheFiles.clear();
 
 	string soundcache_path = g_soundcache_folder + STRING(gpGlobals->mapname) + ".txt";
 	FILE* file = fopen(soundcache_path.c_str(), "r");
@@ -134,7 +136,9 @@ void loadSoundCacheFile(int attempts) {
 				break;
 			}
 
-			g_SoundCache[toLowerCase(line)] = idx;
+			string lowerLine = toLowerCase(line);
+			g_SoundCache[lowerLine] = idx;
+			g_SoundCacheFiles.push_back(lowerLine);
 			idx++;
 		}
 	}
