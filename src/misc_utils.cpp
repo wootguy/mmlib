@@ -198,7 +198,7 @@ void clientCommand(edict_t* plr, string cmd, int destType) {
 
 void handleThreadPrints() {
 	string msg;
-	for (int failsafe = 0; failsafe < 10; failsafe++) {
+	for (int failsafe = 0; failsafe < 128; failsafe++) {
 		if (g_thread_prints.dequeue(msg)) {
 			println(msg.c_str());
 		}
@@ -207,7 +207,7 @@ void handleThreadPrints() {
 		}
 	}
 
-	for (int failsafe = 0; failsafe < 10; failsafe++) {
+	for (int failsafe = 0; failsafe < 128; failsafe++) {
 		if (g_thread_logs.dequeue(msg)) {
 			logln(msg.c_str());
 		}
@@ -515,4 +515,16 @@ bool fileExists(std::string path) {
 		return true;
 	}
 	return false;
+}
+
+// Normalizes any number to an arbitrary range 
+// by assuming the range wraps around when going below min or above max
+// https://stackoverflow.com/questions/1628386/normalise-orientation-between-0-and-360
+float normalizeRangef(const float value, const float start, const float end)
+{
+	const float width = end - start;
+	const float offsetValue = value - start;   // value relative to 0
+
+	return (offsetValue - (floor(offsetValue / width) * width)) + start;
+	// + start to reset back to start of original range
 }

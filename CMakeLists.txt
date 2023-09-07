@@ -3,9 +3,17 @@ cmake_minimum_required(VERSION 3.6)
 if (WIN32)
 	set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/windows)
 	target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
+	set(OS_SPECIFIC_SRCS
+		${CMAKE_CURRENT_LIST_DIR}/src/net/Socket_win.cpp
+		${CMAKE_CURRENT_LIST_DIR}/src/net/network_win.cpp
+	)
 else()
 	set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/linux)
 	target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
+	set(OS_SPECIFIC_SRCS
+		${CMAKE_CURRENT_LIST_DIR}/src/net/Socket_unix.cpp
+		${CMAKE_CURRENT_LIST_DIR}/src/net/network_unix.cpp
+	)
 endif()
 
 set(SVEN_API_HEADERS
@@ -42,9 +50,14 @@ set(META_HELPER_HEADERS
 	${CMAKE_CURRENT_LIST_DIR}/src/UserInfo.h
 	${CMAKE_CURRENT_LIST_DIR}/src/NetMessage.h
 	${CMAKE_CURRENT_LIST_DIR}/src/HashPak.h
+	${CMAKE_CURRENT_LIST_DIR}/src/net/IPV4.h
+	${CMAKE_CURRENT_LIST_DIR}/src/net/Socket.h
+	${CMAKE_CURRENT_LIST_DIR}/src/net/Packet.h
+	${CMAKE_CURRENT_LIST_DIR}/src/ThreadSafeInt.h
+	${CMAKE_CURRENT_LIST_DIR}/src/mstream.h
 )
 
-set(META_HELPER_SOURCES
+set(META_HELPER_SOURCES ${OS_SPECIFIC_SRCS}
 	${CMAKE_CURRENT_LIST_DIR}/src/meta_init.cpp
 	${CMAKE_CURRENT_LIST_DIR}/src/meta_utils.cpp
 	${CMAKE_CURRENT_LIST_DIR}/src/misc_utils.cpp
@@ -59,6 +72,10 @@ set(META_HELPER_SOURCES
 	${CMAKE_CURRENT_LIST_DIR}/src/NetMessage.cpp
 	${CMAKE_CURRENT_LIST_DIR}/src/HashPak.cpp
 	${CMAKE_CURRENT_LIST_DIR}/src/MD5.cpp
+	${CMAKE_CURRENT_LIST_DIR}/src/net/IPV4.cpp
+	${CMAKE_CURRENT_LIST_DIR}/src/net/Packet.cpp
+	${CMAKE_CURRENT_LIST_DIR}/src/ThreadSafeInt.cpp
+	${CMAKE_CURRENT_LIST_DIR}/src/mstream.cpp
 )
 
 set(SVEN_API_HEADERS ${SVEN_API_HEADERS} PARENT_SCOPE)
@@ -73,3 +90,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/incl
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/engine)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/pm_shared)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src/net)

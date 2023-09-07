@@ -116,3 +116,5 @@ void RemoveEntity(edict_t* ent);
 void RelaySay(std::string message);
 
 bool fileExists(std::string path);
+
+float normalizeRangef(const float value, const float start, const float end);
