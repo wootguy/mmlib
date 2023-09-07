@@ -1,6 +1,7 @@
 #pragma once
 #include <extdll.h>
 #include <string>
+#include <vector>
 #include <map>
 
 #define SND_IDK 16384 // this is set by ambient_music but idk what it does
@@ -30,6 +31,7 @@ void PlaySound(edict_t* entity, int channel, const std::string& sample, float vo
 
 // maps a file path to a sound index, for use with the StartSound network message
 extern std::map<std::string, int> g_SoundCache;
+extern std::vector<std::string> g_SoundCacheFiles; // vector index = sound index
 
 // call in MapInit_post
 void loadSoundCacheFile(int attempts = 5);
