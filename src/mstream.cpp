@@ -66,7 +66,7 @@ uint64_t mstream::write( void * src, uint64_t bytes )
 	if (newpos > end || newpos < start)
 	{
 		eomFlag = true;
-		bytes = end - pos;
+		return 0;
 	}
 	memcpy((void*)pos, src, bytes);
 	pos = newpos;
@@ -99,8 +99,14 @@ void mstream::seek( uint64_t to )
 	pos = start + to;
 	currentBit = 0;
 	eomFlag = false;
-	if (pos >= end || pos < start)
+	if (pos < start) {
+		pos = start;
 		eomFlag = true;
+	}
+	if (pos >= end) {
+		pos = end;
+		eomFlag = true;
+	}
 }
 
 void mstream::seek( uint64_t to, int whence )
