@@ -528,3 +528,12 @@ float normalizeRangef(const float value, const float start, const float end)
 	return (offsetValue - (floor(offsetValue / width) * width)) + start;
 	// + start to reset back to start of original range
 }
+
+void kickPlayer(edict_t* ent, const char* reason) {
+	if (!ent || (ent->v.flags & FL_CLIENT) == 0) {
+		return;
+	}
+	int userid = g_engfuncs.pfnGetPlayerUserId(ent);
+	g_engfuncs.pfnServerCommand(UTIL_VarArgs("kick #%d %s\n", userid, reason));
+	g_engfuncs.pfnServerExecute();
+}

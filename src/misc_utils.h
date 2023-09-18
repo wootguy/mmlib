@@ -118,3 +118,5 @@ void RelaySay(std::string message);
 bool fileExists(std::string path);
 
 float normalizeRangef(const float value, const float start, const float end);
+
+void kickPlayer(edict_t* ent, const char* reason="");
