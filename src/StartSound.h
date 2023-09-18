@@ -31,7 +31,12 @@ void PlaySound(edict_t* entity, int channel, const std::string& sample, float vo
 
 // maps a file path to a sound index, for use with the StartSound network message
 extern std::map<std::string, int> g_SoundCache;
+
+// maps a sentence name to a sentence index, for use with the StartSound network message
+extern std::map<std::string, int> g_SentenceCache;
+
 extern std::vector<std::string> g_SoundCacheFiles; // vector index = sound index
+extern std::vector<std::string> g_SentenceCacheNames; // vector index = sentence index
 
 // call in MapInit_post
 void loadSoundCacheFile(int attempts = 5);

@@ -8,6 +8,8 @@ using namespace std;
 const string g_soundcache_folder = "svencoop/maps/soundcache/";
 std::map<std::string, int> g_SoundCache;
 std::vector<std::string> g_SoundCacheFiles;
+std::map<std::string, int> g_SentenceCache;
+std::vector<std::string> g_SentenceCacheNames;
 
 void StartSoundMsg::send(int msg_dest, edict_t* target) {
 	MESSAGE_BEGIN(msg_dest, MSG_StartSound, NULL, target);
@@ -52,6 +54,10 @@ void PlaySound(edict_t* entity, int channel, const std::string& sample, float vo
 	edict_t* target = target_ent_unreliable ? INDEXENT(target_ent_unreliable) : NULL;
 	StartSoundMsg msg;
 
+	if (sample.length() == 0) {
+		return;
+	}
+
 	msg.channel = clamp(channel, 0, MAX_SOUND_CHANNELS);
 	msg.sample = sample;
 	msg.volume = volume;
@@ -59,7 +65,14 @@ void PlaySound(edict_t* entity, int channel, const std::string& sample, float vo
 	msg.flags = flags;
 	msg.pitch = pitch;
 	msg.origin = vecOrigin;
-	msg.soundIdx = g_SoundCache[toLowerCase(sample)];
+
+	if (sample[0] == '!') {
+		msg.flags |= SND_SENTENCE;
+		msg.soundIdx = g_SentenceCache[toLowerCase(sample.substr(1))];
+	}
+	else {
+		msg.soundIdx = g_SoundCache[toLowerCase(sample)];
+	}
 
 	if (entity) {
 		msg.entindex = ENTINDEX(entity);
@@ -99,13 +112,22 @@ void PlaySound(edict_t* entity, int channel, const std::string& sample, float vo
 	}
 }
 
+enum PARSE_MODE {
+	PARSE_NONE,
+	PARSE_SOUNDS,
+	PARSE_SENTENCES
+};
+
 void loadSoundCacheFile(int attempts) {
 	g_SoundCache.clear();
 	g_SoundCacheFiles.clear();
+	g_SentenceCache.clear();
+	g_SentenceCacheNames.clear();
 
 	string soundcache_path = g_soundcache_folder + STRING(gpGlobals->mapname) + ".txt";
 	FILE* file = fopen(soundcache_path.c_str(), "r");
-	int idx = 0;
+	int soundIdx = 0;
+	int sentenceIdx = 0;
 
 	if (!file) {
 		if (attempts > 0) {
@@ -119,27 +141,36 @@ void loadSoundCacheFile(int attempts) {
 	}
 
 	string line;
-	bool parsingSounds = false;
+	int parsemode = PARSE_NONE;
 	while (cgetline(file, line)) {
 		if (line.empty()) {
 			continue;
 		}
 
-		if (!parsingSounds) {
-			if (line.find("SOUNDLIST {") == 0) {
-				parsingSounds = true;
-				continue;
-			}
+		if (line.find("SOUNDLIST {") == 0) {
+			parsemode = PARSE_SOUNDS;
+			continue;
 		}
-		else {
-			if (line.find("}") == 0) {
-				break;
-			}
+		if (line.find("SENTENCELIST {") == 0) {
+			parsemode = PARSE_SENTENCES;
+			continue;
+		}
+		if (line.find("}") == 0) {
+			parsemode = PARSE_NONE;
+		}
 
-			string lowerLine = toLowerCase(line);
-			g_SoundCache[lowerLine] = idx;
+		string lowerLine = toLowerCase(line);
+
+		if (parsemode == PARSE_SOUNDS) {
+			g_SoundCache[lowerLine] = soundIdx;
 			g_SoundCacheFiles.push_back(lowerLine);
-			idx++;
+			soundIdx++;
+		}
+		else if (parsemode == PARSE_SENTENCES) {
+			string name = lowerLine.substr(0, lowerLine.find_first_of(" "));
+			g_SentenceCache[name] = sentenceIdx;
+			g_SentenceCacheNames.push_back(name);
+			sentenceIdx++;
 		}
 	}
 
