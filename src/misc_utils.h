@@ -18,7 +18,7 @@ extern ThreadSafeQueue<std::string> g_thread_logs;
 		ALERT(at_console, (char*)(std::string(fmt) + "\n").c_str(), ##__VA_ARGS__ ); \
 	} \
 	else { \
-		g_thread_prints.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+		g_thread_prints.enqueue(UTIL_VarArgs((char*)std::string(fmt).c_str(), ##__VA_ARGS__ )); \
 	} \
 }
 
@@ -27,7 +27,7 @@ extern ThreadSafeQueue<std::string> g_thread_logs;
 		ALERT(at_logged, (char*)(std::string(fmt) + "\n").c_str(), ##__VA_ARGS__ ); \
 	} \
 	else { \
-		g_thread_logs.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+		g_thread_logs.enqueue(UTIL_VarArgs((char*)std::string(fmt).c_str(), ##__VA_ARGS__ )); \
 	} \
 }
 
@@ -37,7 +37,7 @@ extern ThreadSafeQueue<std::string> g_thread_logs;
 		ALERT(at_console, (char*)(std::string(fmt)).c_str(), ##__VA_ARGS__ ); \
 	} \
 	else { \
-		g_thread_prints.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+		g_thread_prints.enqueue(UTIL_VarArgs((char*)std::string(fmt).c_str(), ##__VA_ARGS__ )); \
 	} \
 }
 
@@ -46,7 +46,7 @@ extern ThreadSafeQueue<std::string> g_thread_logs;
 		ALERT(at_logged, (char*)(std::string(fmt)).c_str(), ##__VA_ARGS__ ); \
 	} \
 	else { \
-		g_thread_logs.enqueue(UTIL_VarArgs((char*)string(fmt).c_str(), ##__VA_ARGS__ )); \
+		g_thread_logs.enqueue(UTIL_VarArgs((char*)std::string(fmt).c_str(), ##__VA_ARGS__ )); \
 	} \
 }
 
