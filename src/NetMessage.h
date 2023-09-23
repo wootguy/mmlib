@@ -42,3 +42,7 @@ struct NetMessage {
 	void clear();
 	void print();
 };
+
+const char* msgDestStr(int msg_dest);
+
+const char* msgTypeStr(int msg_type);
