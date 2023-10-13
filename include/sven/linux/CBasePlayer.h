@@ -66,10 +66,6 @@ public:
         return true; /* return *((byte*)this + 3292); */
     }
 
-    bool IsAlive() {
-        return !pev->deadflag && pev->health > 0.0f && IsConnected();
-    }
-
     bool IsOnLadder() {
         return pev->movetype == MOVETYPE_FLY;
     }
