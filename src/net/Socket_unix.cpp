@@ -10,6 +10,9 @@
 #include <string.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <string>
+
+using namespace std;
 
 struct SocketData
 {
