@@ -36,6 +36,8 @@ else()
 	set(MMLIB_CXX_FLAGS "-m32 -std=c++11 -fvisibility=hidden -static-libstdc++ -static-libgcc -g" PARENT_SCOPE)
 	set(MMLIB_CXX_FLAGS_DEBUG "-O0 -Wall" PARENT_SCOPE)
 	set(MMLIB_CXX_FLAGS_RELEASE "-Os -w -Wfatal-errors" PARENT_SCOPE)
+	
+	set(CMAKE_SHARED_LIBRARY_PREFIX "" PARENT_SCOPE)
 endif()
 
 function(mmlib_ide_setup)
