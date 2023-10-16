@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#pragma comment(linker, "/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8")
+#pragma comment(linker, "/SECTION:.data,RW")
+
 // Must provide at least one of these..
 static META_FUNCTIONS gMetaFunctionTable = {
 	NULL,			// pfnGetEntityAPI				HL SDK; called before game DLL
