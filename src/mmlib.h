@@ -6,6 +6,7 @@
 #include "misc_utils.h"
 #include "meta_helper.h"
 #include "Scheduler.h"
+#include "crc32.h"
 
 // client/game effects
 #include "StartSound.h"
