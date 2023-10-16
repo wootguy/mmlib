@@ -63,7 +63,7 @@ public:
     int m_iPlayerClass; // The player's class type.
 
     bool IsConnected() {
-        return true; /* return *((byte*)this + 3292); */
+        return STRING(pev->netname)[0] != '\0'; /* return *((byte*)this + 3292); */
     }
 
     bool IsOnLadder() {
