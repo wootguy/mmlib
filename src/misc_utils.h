@@ -120,3 +120,5 @@ bool fileExists(std::string path);
 float normalizeRangef(const float value, const float start, const float end);
 
 void kickPlayer(edict_t* ent, const char* reason="");
+
+uint64_t steamid_to_steamid64(const std::string& steamid);

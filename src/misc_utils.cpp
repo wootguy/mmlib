@@ -537,3 +537,16 @@ void kickPlayer(edict_t* ent, const char* reason) {
 	g_engfuncs.pfnServerCommand(UTIL_VarArgs("kick #%d %s\n", userid, reason));
 	g_engfuncs.pfnServerExecute();
 }
+
+uint64_t steamid_to_steamid64(const string& steamid) {
+	uint64_t X = atoi(steamid.substr(8, 1).c_str());
+	uint64_t Y = atoi(steamid.substr(10).c_str());
+
+	uint64_t steam64id = 76561197960265728;
+	steam64id += Y * 2;
+	if (X == 1) {
+		steam64id += 1;
+	}
+
+	return steam64id;
+}
