@@ -38,6 +38,9 @@ else()
 	set(MMLIB_CXX_FLAGS_RELEASE "-Os -w -Wfatal-errors" PARENT_SCOPE)
 	
 	set(CMAKE_SHARED_LIBRARY_PREFIX "" PARENT_SCOPE)
+	
+	# required for metamod osdep.h
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -Dlinux)
 endif()
 
 function(mmlib_ide_setup)
