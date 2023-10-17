@@ -28,3 +28,24 @@ To pull updates from this mmlib repo into your project, run:
 ```
 git submodule update --recursive --remote
 ```
+
+# Generic build instructions for plugins that use mmlib
+Most of my plugins don't change the mmlib build process and so you can follow the instructions below to build them all.
+
+Windows:  
+1. Intall Git for windows, CMake, and Visual Studio 2022 (select "Desktop development with C++")
+2. Open a command prompt somewhere and run this command to download the code (replace `PluginName` with the name of the plugin repo):
+    ```
+    git clone --recurse-submodules https://github.com/wootguy/PluginName
+    ```
+3. Open the folder that was created and run `build.bat`
+
+Linux:
+1. Install Git, CMake, and a compiler.  
+    Debian: `sudo apt install build-essential git cmake`
+2. Open a terminal somewhere and and run these commands, replacing `PluginName` with the name of the plugin repo: 
+    ```
+    git clone --recurse-submodules https://github.com/wootguy/PluginName
+    cd PluginName
+    sh build.sh
+    ```
