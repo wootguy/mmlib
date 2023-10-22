@@ -15,3 +15,15 @@ void ThreadSafeInt::setValue(int val) {
 	value = val;
 	mutex.unlock();
 }
+
+void ThreadSafeInt::inc() {
+	mutex.lock();
+	value++;
+	mutex.unlock();
+}
+
+void ThreadSafeInt::dec() {
+	mutex.lock();
+	value--;
+	mutex.unlock();
+}
