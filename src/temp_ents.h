@@ -28,6 +28,11 @@ void te_beampoints(Vector start, Vector end,
 	Color c = WHITE, uint8_t scroll = 32,
 	int msgType = MSG_BROADCAST, edict_t* dest = NULL);
 
+void te_beamdisk(Vector pos, float radius,
+	const char* sprite = "sprites/laserbeam.spr", uint8_t startFrame = 0,
+	uint8_t frameRate = 16, uint8_t life = 8, Color c = WHITE, uint8_t scrollSpeed = 0,
+	int msgType = MSG_BROADCAST, edict_t* dest = NULL);
+
 void te_tracer(Vector start, Vector end,
 	int msgType = MSG_BROADCAST, edict_t* dest = NULL);
 

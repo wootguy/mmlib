@@ -52,6 +52,31 @@ void te_beampoints(Vector start, Vector end,
 	MESSAGE_END();
 }
 
+void te_beamdisk(Vector pos, float radius, const char* sprite, uint8_t startFrame,
+	uint8_t frameRate, uint8_t life, Color c, uint8_t scrollSpeed, int msgType, edict_t* dest)
+{
+	MESSAGE_BEGIN(msgType, SVC_TEMPENTITY, NULL, dest);
+	WRITE_BYTE(TE_BEAMDISK);
+	WRITE_COORD(pos.x);
+	WRITE_COORD(pos.y);
+	WRITE_COORD(pos.z);
+	WRITE_COORD(pos.x);
+	WRITE_COORD(pos.y);
+	WRITE_COORD(pos.z + radius);
+	WRITE_SHORT(g_engfuncs.pfnModelIndex(sprite));
+	WRITE_BYTE(startFrame);
+	WRITE_BYTE(frameRate);
+	WRITE_BYTE(life);
+	WRITE_BYTE(1); // "width" - has no effect
+	WRITE_BYTE(0); // "noise" - has no effect
+	WRITE_BYTE(c.r);
+	WRITE_BYTE(c.g);
+	WRITE_BYTE(c.b);
+	WRITE_BYTE(c.a);
+	WRITE_BYTE(scrollSpeed);
+	MESSAGE_END();
+}
+
 void te_tracer(Vector start, Vector end, int msgType, edict_t* dest)
 {
 	MESSAGE_BEGIN(msgType, SVC_TEMPENTITY, NULL, dest);
