@@ -183,3 +183,22 @@ void te_bloodsprite(Vector pos, const char* sprite1, const char* sprite2, uint8_
 	WRITE_BYTE(scale);
 	MESSAGE_END();
 }
+
+void te_beampoints_cube(const Vector& min, const Vector& max, const char* sprite, uint8_t frameStart,
+	uint8_t frameRate, uint8_t life, uint8_t width, uint8_t noise,
+	Color c, uint8_t scroll, int msgType, edict_t* dest) {
+	te_beampoints(Vector(min.x, min.y, min.z), Vector(max.x, min.y, min.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(max.x, min.y, min.z), Vector(max.x, max.y, min.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(max.x, max.y, min.z), Vector(min.x, max.y, min.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(min.x, max.y, min.z), Vector(min.x, min.y, min.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+
+	te_beampoints(Vector(min.x, min.y, max.z), Vector(max.x, min.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(max.x, min.y, max.z), Vector(max.x, max.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(max.x, max.y, max.z), Vector(min.x, max.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(min.x, max.y, max.z), Vector(min.x, min.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+
+	te_beampoints(Vector(min.x, min.y, min.z), Vector(min.x, min.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(max.x, min.y, min.z), Vector(max.x, min.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(max.x, max.y, min.z), Vector(max.x, max.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+	te_beampoints(Vector(min.x, max.y, min.z), Vector(min.x, max.y, max.z), sprite, frameStart, frameRate, life, width, noise, c, scroll, msgType, dest);
+};
