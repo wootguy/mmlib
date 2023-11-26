@@ -134,7 +134,7 @@ edict_t* getPlayerByName(edict_t* caller, string name, bool printError) {
 }
 
 bool isValidPlayer(edict_t* plr) {
-	return plr && (plr->v.flags & FL_CLIENT) != 0;
+	return plr && (plr->v.flags & FL_CLIENT) != 0 && STRING(plr->v.netname)[0] != '\0';
 }
 
 string trimSpaces(string s) {
