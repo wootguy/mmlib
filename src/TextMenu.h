@@ -56,6 +56,7 @@ private:
 
 
 extern TextMenu g_textMenus[MAX_PLAYERS];
+extern int g_textMenuMsgId;
 
 // use this to create menus for each player.
 // When creating a menu for all players, pass NULL for player.
