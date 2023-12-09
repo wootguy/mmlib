@@ -5,10 +5,11 @@
 using namespace std;
 
 TextMenu g_textMenus[MAX_PLAYERS];
+int g_textMenuMsgId = MSG_ShowMenu;
 
 // listen for any other functions/plugins opening menus, so that TextMenu knows if it's the active menu
 void TextMenuMessageBeginHook(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed) {
-	if (msg_type != MSG_ShowMenu) {
+	if (msg_type != g_textMenuMsgId) {
 		return;
 	}
 
@@ -132,10 +133,6 @@ void TextMenu::AddItem(string displayText, string optionData) {
 }
 
 void TextMenu::Open(int8_t duration, int8_t page, edict_t* player) {
-	if (!isValidPlayer(player)) {
-		return;
-	}
-
 	string menuText = title + "\n\n";
 
 	uint16_t validSlots = (1 << 9); // exit option always valid
@@ -180,8 +177,8 @@ void TextMenu::Open(int8_t duration, int8_t page, edict_t* player) {
 
 	menuText += "0: Exit";
 
-	if (player) {
-		MESSAGE_BEGIN(MSG_ONE, MSG_ShowMenu, NULL, player);
+	if (isValidPlayer(player)) {
+		MESSAGE_BEGIN(MSG_ONE, g_textMenuMsgId, NULL, player);
 		WRITE_SHORT(validSlots);
 		WRITE_CHAR(duration);
 		WRITE_BYTE(FALSE); // "need more" (?)
@@ -192,7 +189,7 @@ void TextMenu::Open(int8_t duration, int8_t page, edict_t* player) {
 	}
 	else {
 		println("WARNING: pagination is broken for menus that don't have a destination player");
-		MESSAGE_BEGIN(MSG_ALL, MSG_ShowMenu, NULL, player);
+		MESSAGE_BEGIN(MSG_ALL, g_textMenuMsgId);
 		WRITE_SHORT(validSlots);
 		WRITE_CHAR(duration);
 		WRITE_BYTE(FALSE); // "need more" (?)
