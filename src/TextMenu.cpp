@@ -6,6 +6,7 @@ using namespace std;
 
 TextMenu g_textMenus[MAX_PLAYERS];
 int g_textMenuMsgId = MSG_ShowMenu;
+int g_exitOptionNum = 10;
 
 // listen for any other functions/plugins opening menus, so that TextMenu knows if it's the active menu
 void TextMenuMessageBeginHook(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed) {
@@ -135,7 +136,7 @@ void TextMenu::AddItem(string displayText, string optionData) {
 void TextMenu::Open(int8_t duration, int8_t page, edict_t* player) {
 	string menuText = title + "\n\n";
 
-	uint16_t validSlots = (1 << 9); // exit option always valid
+	uint16_t validSlots = (1 << (g_exitOptionNum-1)); // exit option always valid
 
 	lastPage = page;
 	lastDuration = duration;
@@ -175,7 +176,7 @@ void TextMenu::Open(int8_t duration, int8_t page, edict_t* player) {
 		}
 	}
 
-	menuText += "0: Exit";
+	menuText += to_string(g_exitOptionNum % 10) + ": Exit";
 
 	if (isValidPlayer(player)) {
 		MESSAGE_BEGIN(MSG_ONE, g_textMenuMsgId, NULL, player);
