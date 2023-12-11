@@ -6,6 +6,16 @@
 #include "meta_utils.h"
 #include <algorithm>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifndef WIN32
+#include <unistd.h>
+#endif
+
+#ifdef WIN32
+#define stat _stat
+#endif
+
 using namespace std;
 
 thread::id g_main_thread_id = std::this_thread::get_id();
@@ -549,4 +559,13 @@ uint64_t steamid_to_steamid64(const string& steamid) {
 	}
 
 	return steam64id;
+}
+
+uint64_t getFileModifiedTime(std::string path) {
+	struct stat result;
+	if (stat(path.c_str(), &result) == 0) {
+		return result.st_mtime;
+	}
+
+	return 0;
 }
