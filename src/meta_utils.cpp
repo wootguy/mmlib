@@ -108,7 +108,8 @@ CommandArgs::CommandArgs() {
 }
 
 void CommandArgs::loadArgs() {
-	isConsoleCmd = toLowerCase(CMD_ARGV(0)) != "say";
+	std::string firstArgLower = toLowerCase(CMD_ARGV(0));
+	isConsoleCmd = firstArgLower != "say" && firstArgLower != "say_team";
 
 	string argStr = CMD_ARGC() > 1 ? CMD_ARGS() : "";
 
