@@ -45,6 +45,16 @@ string getPlayerUniqueId(edict_t* plr) {
 	return steamId;
 }
 
+uint64_t getPlayerCommunityId(edict_t* plr) {
+	string id = getPlayerUniqueId(plr);
+
+	if (id == "STEAM_ID_NULL" || id == "STEAM_ID_LAN" || id == "BOT") {
+		return 0;
+	}
+
+	return steamid_to_steamid64(id);
+}
+
 string replaceString(string subject, string search, string replace) {
 	size_t pos = 0;
 	while ((pos = subject.find(search, pos)) != string::npos)
@@ -561,6 +571,16 @@ uint64_t steamid_to_steamid64(const string& steamid) {
 	return steam64id;
 }
 
+string steamid64_to_steamid(uint64_t steam64) {
+	steam64 -= 76561197960265728;
+
+	if (steam64 & 1) {
+		return "STEAM_0:1:" + to_string((steam64 - 1) / 2);
+	}
+	
+	return "STEAM_0:0:" + to_string(steam64 / 2);
+}
+
 uint64_t getFileModifiedTime(std::string path) {
 	struct stat result;
 	if (stat(path.c_str(), &result) == 0) {
@@ -568,4 +588,84 @@ uint64_t getFileModifiedTime(std::string path) {
 	}
 
 	return 0;
+}
+
+void winPath(string& path) {
+	for (int i = 0, size = path.size(); i < size; i++)
+	{
+		if (path[i] == '/')
+			path[i] = '\\';
+	}
+}
+
+vector<string> getDirFiles(string path, string extension, string startswith, bool onlyOne)
+{
+	vector<string> results;
+
+#if defined(WIN32) || defined(_WIN32)
+	path = path + startswith + "*." + extension;
+	winPath(path);
+	WIN32_FIND_DATA FindFileData;
+	HANDLE hFind;
+
+	//println("Target file is " + path);
+	hFind = FindFirstFile(path.c_str(), &FindFileData);
+	if (hFind == INVALID_HANDLE_VALUE)
+	{
+		//println("FindFirstFile failed " + str((int)GetLastError()) + " " + path);
+		return results;
+	}
+	else
+	{
+		results.push_back(FindFileData.cFileName);
+
+		while (FindNextFile(hFind, &FindFileData) != 0)
+		{
+			results.push_back(FindFileData.cFileName);
+			if (onlyOne)
+				break;
+		}
+
+		FindClose(hFind);
+	}
+#else
+	extension = toLowerCase(extension);
+	startswith = toLowerCase(startswith);
+	startswith.erase(std::remove(startswith.begin(), startswith.end(), '*'), startswith.end());
+	DIR* dir = opendir(path.c_str());
+
+	if (!dir)
+		return results;
+
+	while (true)
+	{
+		dirent* entry = readdir(dir);
+
+		if (!entry)
+			break;
+
+		if (entry->d_type == DT_DIR)
+			continue;
+
+		string name = string(entry->d_name);
+		string lowerName = toLowerCase(name);
+
+		if (extension.size() > name.size() || startswith.size() > name.size())
+			continue;
+
+		if (extension == "*" || std::equal(extension.rbegin(), extension.rend(), lowerName.rbegin()))
+		{
+			if (startswith.size() == 0 || std::equal(startswith.begin(), startswith.end(), lowerName.begin()))
+			{
+				results.push_back(name);
+				if (onlyOne)
+					break;
+			}
+		}
+	}
+
+	closedir(dir);
+#endif
+
+	return results;
 }
