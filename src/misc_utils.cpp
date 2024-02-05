@@ -8,12 +8,13 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef WIN32
-#include <unistd.h>
-#endif
 
 #ifdef WIN32
 #define stat _stat
+#else
+#include <time.h>
+#include <unistd.h>
+#include <dirent.h>
 #endif
 
 using namespace std;
