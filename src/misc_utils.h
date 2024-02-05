@@ -63,6 +63,9 @@ edict_t* getPlayerByUniqueId(std::string id);
 // unique ID = Steam ID or name if on LAN
 std::string getPlayerUniqueId(edict_t* plr);
 
+// return community ID or 0 for LAN/bot/null
+uint64_t getPlayerCommunityId(edict_t* plr);
+
 // User IDs change every time a user connects to the server
 edict_t* getPlayerByUserId(int id);
 
@@ -123,4 +126,11 @@ void kickPlayer(edict_t* ent, const char* reason="");
 
 uint64_t steamid_to_steamid64(const std::string& steamid);
 
+std::string steamid64_to_steamid(uint64_t steam64);
+
 uint64_t getFileModifiedTime(std::string path);
+
+// finds files in a directory using "<startswith>*.<extension>" as the search string
+// set onlyOne to true to stop searching after the first match
+// path must end with a slash
+std::vector<std::string> getDirFiles(std::string path, std::string extension, std::string startswith, bool onlyOne);
