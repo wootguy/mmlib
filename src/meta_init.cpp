@@ -27,11 +27,58 @@ enginefuncs_t g_engine_hooks_post;
 DLL_FUNCTIONS g_dll_hooks;
 DLL_FUNCTIONS g_dll_hooks_post;
 NEW_DLL_FUNCTIONS g_newdll_hooks;
+HLCOOP_FUNCTIONS g_hlcoop_funcs;
 
 // Global vars from metamod:
 meta_globals_t* gpMetaGlobals;		// metamod globals
 gamedll_funcs_t* gpGamedllFuncs;	// gameDLL function tables
 mutil_funcs_t* gpMetaUtilFuncs;		// metamod utility functions
+
+typedef int(*HLCOOP_API_FUNCTION)(HLCOOP_FUNCTIONS* pFunctionTable, int interfaceVersion);
+
+void* g_hlcoop_lib;
+int g_mod_api;
+
+#ifndef _WIN32
+#define GetProcAddress dlsym
+#define GetLastError dlerror
+#define FreeLibrary dlclose
+#define HMODULE void*
+#endif
+
+void GetHlcoopModFunctions()
+{
+	const char* hlcoop_api_func_name = "GetModAPI";
+
+#ifdef _WIN32
+	const char* hlcoop_lib_path = "valve/dlls/sevenkewp.dll"; // TODO: make this a compile def or smth
+	g_hlcoop_lib = LoadLibraryA(hlcoop_lib_path);
+#else
+	const char* hlcoop_lib_path = "valve/dlls/sevenkewp.so";
+	g_hlcoop_lib = dlopen(hlcoop_lib_path, RTLD_NOW | RTLD_DEEPBIND | RTLD_LOCAL);
+#endif
+
+	if (!g_hlcoop_lib)
+	{
+		LOG_ERROR(PLID, "LoadLibrary failed on %s (%d)\n", hlcoop_lib_path, GetLastError());
+		return;
+	}
+
+	HLCOOP_API_FUNCTION apiFunc = (HLCOOP_API_FUNCTION)GetProcAddress((HMODULE)g_hlcoop_lib, hlcoop_api_func_name);
+
+	if (apiFunc) {
+		int apiVersion = HLCOOP_API_VERSION;
+		if (apiFunc(&g_hlcoop_funcs, apiVersion)) {
+			g_mod_api = MOD_API_HLCOOP;
+		}
+		else {
+			LOG_ERROR(PLID, "GetModAPI call from metamod plugin failed.\n", hlcoop_api_func_name, hlcoop_lib_path);
+		}
+	}
+	else {
+		LOG_ERROR(PLID, "Failed to find api function named %s in %s\n", hlcoop_api_func_name, hlcoop_lib_path);
+	}
+}
 
 // Metamod requesting info about this plugin:
 //  ifvers			(given) interface_version metamod is using
@@ -71,6 +118,10 @@ META_FUNCTIONS* pFunctionTable, meta_globals_t* pMGlobals,
 	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs = pGamedllFuncs;
 
+#ifdef LOAD_GAME_API
+	GetHlcoopModFunctions();
+#endif
+
 	PluginInit();
 
 	return(TRUE);
@@ -83,6 +134,11 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME /* now */,
 	PL_UNLOAD_REASON /* reason */)
 {
 	PluginExit();
+
+	if (g_hlcoop_lib) {
+		FreeLibrary((HMODULE)g_hlcoop_lib);
+	}
+
 	return(TRUE);
 }
 
