@@ -560,6 +560,10 @@ void kickPlayer(edict_t* ent, const char* reason) {
 }
 
 uint64_t steamid_to_steamid64(const string& steamid) {
+	if (steamid.size() <= 10) {
+		return 0;
+	}
+
 	uint64_t X = atoi(steamid.substr(8, 1).c_str());
 	uint64_t Y = atoi(steamid.substr(10).c_str());
 
