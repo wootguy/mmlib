@@ -55,7 +55,7 @@ void GetHlcoopModFunctions()
 	g_hlcoop_lib = LoadLibraryA(hlcoop_lib_path);
 #else
 	const char* hlcoop_lib_path = "valve/dlls/sevenkewp.so";
-	g_hlcoop_lib = dlopen(hlcoop_lib_path, RTLD_NOW | RTLD_DEEPBIND | RTLD_LOCAL);
+	g_hlcoop_lib = dlopen(hlcoop_lib_path, RTLD_NOW | RTLD_LOCAL);
 #endif
 
 	if (!g_hlcoop_lib)
