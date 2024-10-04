@@ -9,7 +9,7 @@ pause
 
 mkdir build
 cd build
-cmake -A Win32 -DSKIP_IDE_SETUP=ON ..
+cmake -A Win32 -DSKIP_IDE_SETUP=ON %* ..
 cmake --build . --config Release
 
 @echo off

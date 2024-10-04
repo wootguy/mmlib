@@ -1,6 +1,5 @@
 #include "mmlib.h"
 #include "HUDSprite.h"
-#include "private_api.h"
 #include "meta_utils.h"
 #include "misc_utils.h"
 

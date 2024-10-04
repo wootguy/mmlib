@@ -47,6 +47,7 @@ bool cgetline(FILE* file, string& output) {
 	return false;
 }
 
+#ifndef HLCOOP_BUILD
 void LoadAdminList() {
 	g_admins.clear();
 	FILE* file = fopen(ADMIN_LIST_FILE, "r");
@@ -102,6 +103,7 @@ int AdminLevel(edict_t* plr) {
 	
 	return ADMIN_NO;
 }
+#endif
 
 CommandArgs::CommandArgs() {
 	

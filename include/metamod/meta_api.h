@@ -117,6 +117,8 @@ typedef struct {
 extern gamedll_funcs_t *gpGamedllFuncs DLLHIDDEN;
 extern mutil_funcs_t *gpMetaUtilFuncs DLLHIDDEN;
 
+void UTIL_LogPrintf(char* fmt, ...);
+
 // Tell the dll that we'll be loading it as a metamod plugin, in case it
 // needs to do something special prior to the standard query/attach
 // procedure.  In particular, this will allow for DLL's that can be used as

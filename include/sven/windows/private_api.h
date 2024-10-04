@@ -2,6 +2,9 @@
 #pragma once
 #include <extdll.h>
 
+#ifdef HLCOOP_BUILD
+#include <hlcoop/dlls/cbase.h>
+#else
 // declaring classes that might be used as function arguments or return types before they're defined
 class CBaseEntity;
 class CBaseDelay;
@@ -32,3 +35,4 @@ class CPathTrack;
 #include "CBaseTank.h"
 #include "CItemInventory.h"
 #include "CPathTrack.h"
+#endif
