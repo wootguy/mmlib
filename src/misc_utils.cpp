@@ -17,6 +17,11 @@
 #include <dirent.h>
 #endif
 
+#ifdef HLCOOP_BUILD
+#include "cbase.h"
+typedef EHANDLE EHandle;
+#endif
+
 using namespace std;
 
 thread::id g_main_thread_id = std::this_thread::get_id();
@@ -505,13 +510,32 @@ bool isValidFindEnt(edict_t* ent) {
 }
 
 void RemoveEntityDelay(EHandle h_ent) {
+#ifdef HLCOOP_BUILD
+	if (h_ent) {
+		REMOVE_ENTITY(h_ent.GetEdict());
+	}
+#else
 	if (h_ent.IsValid()) {
 		REMOVE_ENTITY(h_ent);
 	}
+#endif
+	
 }
 
 void RemoveEntity(edict_t* ent) {
 	if (ent) {
+#ifdef HLCOOP_BUILD
+		if (ent->v.flags & FL_CLIENT) {
+			CBaseEntity* plr = CBaseEntity::Instance(ent);
+			plr->Killed(&INDEXENT(0)->v, GIB_ALWAYS);
+		}
+		else {
+			// removing entities in the current frame will mess up FindEntity* funcs
+			EHANDLE h_ent;
+			h_ent.Set(ent);
+			g_Scheduler.SetTimeout(RemoveEntityDelay, 0.0f, h_ent);
+		}
+#else
 		if (ent->v.flags & FL_CLIENT) {
 			Killed(ent, INDEXENT(0), GIB_ALWAYS);
 		}
@@ -519,6 +543,7 @@ void RemoveEntity(edict_t* ent) {
 			// removing entities in the current frame will mess up FindEntity* funcs
 			g_Scheduler.SetTimeout(RemoveEntityDelay, 0.0f, EHandle(ent));
 		}
+#endif
 	}
 }
 

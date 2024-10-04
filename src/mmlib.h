@@ -9,11 +9,21 @@
 #include "crc32.h"
 
 // client/game effects
-#include "StartSound.h"
-#include "HUDSprite.h"
 #include "TextMenu.h"
-#include "UserInfo.h"
 #include "temp_ents.h"
+
+#ifdef HLCOOP_BUILD
+#include "cbase.h"
+#include "CBaseMonster.h"
+#include "CBasePlayer.h"
+#include "CBasePlayerWeapon.h"
+#define CLASS_XRACE_PITDRONE CLASS_ALIEN_RACE_X_PITDRONE
+#define CLASS_XRACE_SHOCK CLASS_ALIEN_RACE_X
+#else
+#include "HUDSprite.h"
+#include "StartSound.h"
+#include "UserInfo.h"
+#endif
 
 // networking
 #include "net/Packet.h"

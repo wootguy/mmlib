@@ -3,7 +3,6 @@
 #include <meta_api.h>
 #include <string>
 #include <map>
-#include "private_api.h"
 #include "ThreadSafeQueue.h"
 #include <thread>
 

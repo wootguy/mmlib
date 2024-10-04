@@ -95,7 +95,9 @@ struct BMPHeader {
 };
 #pragma pack(pop)
 
+#ifndef HLCOOP_BUILD
 #define SVC_CUSTOMIZATION 46
+#endif
 
 class HashPak {
 public:

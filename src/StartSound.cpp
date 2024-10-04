@@ -12,6 +12,7 @@ std::map<std::string, int> g_SentenceCache;
 std::vector<std::string> g_SentenceCacheNames;
 
 void StartSoundMsg::send(int msg_dest, edict_t* target) {
+#ifndef HLCOOP_BUILD
 	MESSAGE_BEGIN(msg_dest, MSG_StartSound, NULL, target);
 	WRITE_SHORT(flags);
 
@@ -46,11 +47,11 @@ void StartSoundMsg::send(int msg_dest, edict_t* target) {
 	WRITE_SHORT(soundIdx);
 
 	MESSAGE_END();
+#endif
 }
 
 void PlaySound(edict_t* entity, int channel, const std::string& sample, float volume, float attenuation, 
 	int flags, int pitch, int target_ent_unreliable, bool setOrigin, const Vector& vecOrigin) {
-
 	edict_t* target = target_ent_unreliable ? INDEXENT(target_ent_unreliable) : NULL;
 	StartSoundMsg msg;
 

@@ -2,6 +2,7 @@
 // The CBase* headers should be enough for most entity-specific plugin needs,
 // but hook requests for those entity functions might go here.
 
+#ifndef HLCOOP_BUILD
 #pragma once
 #include <stdint.h>
 
@@ -64,3 +65,5 @@ struct HLCOOP_FUNCTIONS {
 	// spawns an entity and returns the relocated edict pointer
 	edict_t* (*pfnSpawnEdict)(edict_t* pent);
 };
+
+#endif

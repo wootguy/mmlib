@@ -374,6 +374,7 @@ const char* msgTypeStr(int msg_type) {
 	case SVC_SENDCVARVALUE2:
 		sdst = "SVC_SENDCVARVALUE2";
 		break;
+#ifndef HLCOOP_BUILD
 	case MSG_SelAmmo:
 		sdst = "MSG_SelAmmo";
 		break;
@@ -620,6 +621,7 @@ const char* msgTypeStr(int msg_type) {
 	case MSG_VModelPos:
 		sdst = "MSG_VModelPos";
 		break;
+#endif
 	default:
 		sdst = UTIL_VarArgs("%d (unkown)", msg_type);
 		break;
@@ -627,6 +629,8 @@ const char* msgTypeStr(int msg_type) {
 
 	return sdst;
 }
+
+#undef print
 
 void NetMessage::print() {
 	bool hasOrigin = pOrigin[0] != 0 || pOrigin[1] != 0 || pOrigin[2] != 0;

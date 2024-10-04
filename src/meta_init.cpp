@@ -80,6 +80,23 @@ void GetHlcoopModFunctions()
 	}
 }
 
+//=========================================================
+// UTIL_LogPrintf - Prints a logged message to console.
+// Preceded by LOG: ( timestamp ) < message >
+//=========================================================
+void UTIL_LogPrintf(char* fmt, ...)
+{
+	va_list			argptr;
+	static char		string[1024];
+
+	va_start(argptr, fmt);
+	vsnprintf(string, sizeof(string), fmt, argptr);
+	va_end(argptr);
+
+	// Print to server console
+	ALERT(at_logged, "%s", string);
+}
+
 // Metamod requesting info about this plugin:
 //  ifvers			(given) interface_version metamod is using
 //  pPlugInfo		(requested) struct with info about plugin
@@ -218,23 +235,6 @@ C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t* pengfuncsFromEngine, int*
 	}
 	memcpy(pengfuncsFromEngine, &g_engine_hooks_post, sizeof(enginefuncs_t));
 	return TRUE;
-}
-
-//=========================================================
-// UTIL_LogPrintf - Prints a logged message to console.
-// Preceded by LOG: ( timestamp ) < message >
-//=========================================================
-void UTIL_LogPrintf(char* fmt, ...)
-{
-	va_list			argptr;
-	static char		string[1024];
-
-	va_start(argptr, fmt);
-	vsnprintf(string, sizeof(string), fmt, argptr);
-	va_end(argptr);
-
-	// Print to server console
-	ALERT(at_logged, "%s", string);
 }
 
 
