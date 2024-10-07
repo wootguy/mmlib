@@ -1,5 +1,5 @@
 #!/bin/sh
 
 mkdir build; cd build
-cmake .. -DCMAKE_BUILD_TYPE=RELEASE
+cmake .. -DCMAKE_BUILD_TYPE=RELEASE $@
 make
