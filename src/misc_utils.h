@@ -6,6 +6,10 @@
 #include "ThreadSafeQueue.h"
 #include <thread>
 
+#ifndef HLCOOP_BUILD
+#include "private_api.h"
+#endif
+
 extern std::thread::id g_main_thread_id;
 extern ThreadSafeQueue<std::string> g_thread_prints;
 extern ThreadSafeQueue<std::string> g_thread_logs;
