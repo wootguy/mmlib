@@ -3,7 +3,6 @@
 // functions to making porting from angelscript to metamod easier
 #include <extdll.h>
 #include <meta_api.h>
-#include "hlcoop/api.h"
 
 // engine hook table
 extern enginefuncs_t g_engine_hooks;
@@ -14,8 +13,6 @@ extern DLL_FUNCTIONS g_dll_hooks;
 extern DLL_FUNCTIONS g_dll_hooks_post;
 
 extern NEW_DLL_FUNCTIONS g_newdll_hooks;
-
-extern HLCOOP_FUNCTIONS g_hlcoop_funcs;
 
 extern int g_mod_api; // will be set to the mod ID that an API was loaded for
 

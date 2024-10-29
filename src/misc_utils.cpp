@@ -353,11 +353,7 @@ CBaseEntity* CreateEntity(const char* cname, map<string, string> keyvalues, bool
 	}
 
 	if (spawn) {
-		if (g_mod_api == MOD_API_HLCOOP) {
-			ent = g_hlcoop_funcs.pfnSpawnEdict(ent);
-		} else {
-			gpGamedllFuncs->dllapi_table->pfnSpawn(ent);
-		}
+		gpGamedllFuncs->dllapi_table->pfnSpawn(ent);
 	}
 
 	CBaseEntity* ok = (CBaseEntity*)GET_PRIVATE(ent);

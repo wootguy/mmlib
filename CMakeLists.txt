@@ -5,34 +5,15 @@ set(DLL_INSTALL_PATH "svencoop/addons/metamod/dlls" CACHE PATH "Where to install
 
 option(SKIP_IDE_SETUP "For end users who just want to build the plugin and nothing else" OFF)
 
-if (HLCOOP_BUILD)
-	set(hlcoop_header_path ${CMAKE_CURRENT_LIST_DIR}/include/hlcoop)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/common)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls/env)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls/func)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls/item)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls/monster)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls/path)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls/triggers)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/dlls/weapon)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/engine)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/pm_shared)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/public)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${hlcoop_header_path}/game_shared)
-	target_compile_definitions(${PROJECT_NAME} PUBLIC -DHLCOOP_BUILD -DPLUGIN_BUILD)
-else()
-	target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/common)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/dlls)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/engine)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/pm_shared)
-endif()
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/common)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/dlls)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/engine)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/hlsdk/pm_shared)
 
 if (WIN32)
-	if (NOT HLCOOP_BUILD)
-		set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/windows)
-		target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
-	endif()
+	set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/windows)
+	target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
+
 	set(OS_SPECIFIC_SRCS
 		${CMAKE_CURRENT_LIST_DIR}/src/net/Socket_win.cpp
 		${CMAKE_CURRENT_LIST_DIR}/src/net/network_win.cpp
@@ -50,15 +31,9 @@ if (WIN32)
 	
 	# WinSock libraries for network utils
 	set(MMLIB_LINK_LIBS WS2_32 IPHLPAPI PARENT_SCOPE)
-	
-	if (HLCOOP_BUILD)
-		set(MMLIB_LINK_LIBS WS2_32 IPHLPAPI ${CMAKE_CURRENT_LIST_DIR}/lib/hlcoop.lib PARENT_SCOPE)
-	endif()
 else()
-	if (NOT HLCOOP_BUILD)
-		set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/linux)
-		target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
-	endif()
+	set(sven_header_path ${CMAKE_CURRENT_LIST_DIR}/include/sven/linux)
+	target_include_directories(${PROJECT_NAME} PUBLIC ${sven_header_path})
 	
 	set(OS_SPECIFIC_SRCS
 		${CMAKE_CURRENT_LIST_DIR}/src/net/Socket_unix.cpp
@@ -81,10 +56,6 @@ else()
 	
 	# required for metamod osdep.h
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -Dlinux)
-	
-	if (HLCOOP_BUILD)
-		set(MMLIB_LINK_LIBS ${CMAKE_CURRENT_LIST_DIR}/lib/hlcoop.so PARENT_SCOPE)
-	endif()
 endif()
 
 function(mmlib_ide_setup)
@@ -215,11 +186,7 @@ set(SVEN_API_HEADERS ${SVEN_API_HEADERS} PARENT_SCOPE)
 set(META_HELPER_HEADERS ${META_HELPER_HEADERS} ${SVEN_META_HELPER_HEADERS} PARENT_SCOPE)
 set(META_HELPER_SOURCES ${META_HELPER_SOURCES} ${SVEN_META_HELPER_SOURCES} PARENT_SCOPE)
 
-if (HLCOOP_BUILD)
-	target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES} ${META_HELPER_SOURCES} ${META_HELPER_HEADERS} )
-else()
-	target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES} ${META_HELPER_SOURCES} ${META_HELPER_HEADERS} ${SVEN_META_HELPER_SOURCES} ${SVEN_META_HELPER_HEADERS} ${SVEN_API_HEADERS})
-endif()
+target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES} ${META_HELPER_SOURCES} ${META_HELPER_HEADERS} ${SVEN_META_HELPER_SOURCES} ${SVEN_META_HELPER_HEADERS} ${SVEN_API_HEADERS})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include/metamod)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
