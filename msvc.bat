@@ -11,6 +11,6 @@ pause
 
 mkdir msvc
 cd msvc
-cmake -A Win32 ..
+cmake -A Win32 %* ..
 
 pause
